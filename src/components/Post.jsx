@@ -8,78 +8,95 @@ import { Comment } from './Comment';
 import styles from './Post.module.css';
 
 export function Post({ author, publishedAt, content }) {
-  const [comments, setComments] = useState([
-    'Post muito bacana, hein?!'
-  ]);
 
-  const [newCommentText, setNewCommentText] = useState('');
+    const [comments, setComments] = useState([
+        'Post muito bacana, hein?!'
+    ]);
 
-  const publishedDateFormatted = format(publishedAt, "d 'de' LLLL 'às' HH:mm'h'", {
-    locale: ptBR,
-  });
+    const [newCommentText, setNewCommentText] = useState('');
 
-  const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {
-    locale: ptBR,
-    addSuffix: true
-  });
+    const publishedDateFormatted = format(publishedAt, "d 'de' LLLL 'às' HH:mm'h'", {
+        locale: ptBR,
+    });
 
-  function handleCrateNewComment() {
-    event.preventDefault()
+    const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {
+        locale: ptBR,
+        addSuffix: true
+    });
 
-    setComments([...comments, newCommentText]);
-    setNewCommentText('');
-  }
+    function handleCrateNewComment() {
+        event.preventDefault()
 
-  function handleNewCommentChange() {
-    setNewCommentText(event.target.value);
-  }
+        setComments([...comments, newCommentText]);
+        setNewCommentText('');
+    }
 
-  return (
-    <article className={styles.post}>
-      <header>
-        <div className={styles.author}>
-          <Avatar src={author.avatarUrl} />
-          <div className={styles.authorInfo}>
-            <strong>{author.name}</strong>
-            <span>{author.role}</span>
-          </div>
-        </div>
+    function handleNewCommentChange() {
+        setNewCommentText(event.target.value);
+    }
 
-        <time title={publishedDateFormatted} dateTime={publishedAt.toISOString()}>
-          {publishedDateRelativeToNow}
-        </time>
-      </header>
 
-      <div className={styles.content}>
-        {content.map(line => {
-          if (line.type === 'paragraph') {
-            return <p key={line.content}>{line.content}</p>;
-          } else if (line.type === 'link') {
-            return <p key={line.content}><a href="#">{line.content}</a></p>
-          }
-        })}
-      </div>
+    function deleteComment(commentToDelete) {
+        const commentsWithoutDeletedOne = comments.filter(comment => {
+            return comment !== commentToDelete;
+        })
 
-      <form onSubmit={handleCrateNewComment} className={styles.commentForm}>
-        <strong>Deixe seu feedback</strong>
+        setComments(commentsWithoutDeletedOne);
+    }
 
-        <textarea
-          name="comment"
-          placeholder="Deixe um comentário"
-          value={newCommentText}
-          onChange={handleNewCommentChange}
-        />
+    return (
+        <article className={styles.post}>
+            <header>
+                <div className={styles.author}>
+                    <Avatar src={author.avatarUrl} />
+                    <div className={styles.authorInfo}>
+                        <strong>{author.name}</strong>
+                        <span>{author.role}</span>
+                    </div>
+                </div>
 
-        <footer>
-          <button type="submit">Publicar</button>
-        </footer>
-      </form>
+                <time title={publishedDateFormatted} dateTime={publishedAt.toISOString()}>
+                    {publishedDateRelativeToNow}
+                </time>
+            </header>
 
-      <div className={styles.commentList}>
-        {comments.map(comment => {
-          return <Comment key={comment} content={comment} />
-        })}
-      </div>
-    </article>
-  )
+            <div className={styles.content}>
+                {content.map(line => {
+                    if (line.type === 'paragraph') {
+                        return <p key={line.content}>{line.content}</p>;
+                    } else if (line.type === 'link') {
+                        return <p key={line.content}><a href="#">{line.content}</a></p>
+                    }
+                })}
+            </div>
+
+            <form onSubmit={handleCrateNewComment} className={styles.commentForm}>
+                <strong>Deixe seu feedback</strong>
+
+                <textarea
+                    name="comment"
+                    placeholder="Deixe um comentário"
+                    value={newCommentText}
+                    onChange={handleNewCommentChange}
+                />
+
+                <footer>
+                    <button type="submit">Publicar</button>
+                </footer>
+            </form>
+
+            <div className={styles.commentList}>
+                {comments.map(comment => {
+                    return (
+                        <Comment
+                            key={comment}
+                            content={comment}
+                            onDeleteComment={deleteComment}
+                        />
+                    )
+                })}
+            </div>
+        </article>
+    )
+
 }
