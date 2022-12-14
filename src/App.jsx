@@ -1,17 +1,18 @@
-import { Header } from "./components/Header";
-import { Sidebar } from "./components/Sidebar";
+import { Header } from './components/Header';
+import { Post } from './components/Post'
+import { Sidebar } from './components/Sidebar';
+
+import styles from './App.module.css';
 
 import './global.css';
-import styles from './App.module.css';
-import { Post } from "./components/Post";
 
 const posts = [
   {
     id: 1,
     author: {
       avatarUrl: 'https://github.com/fernandotag.png',
-      name: 'Diego Fernandes',
-      role: 'CTO @Rocketseat'
+      name: 'Fernando',
+      role: 'Web developer'
     },
     content: [
       { type: 'paragraph', content: 'Fala galera 👋' },
@@ -24,8 +25,8 @@ const posts = [
     id: 2,
     author: {
       avatarUrl: 'https://github.com/fernandotag.png',
-      name: 'Mayk Brito',
-      role: 'Educator @Rocketseat'
+      name: 'Fernando',
+      role: 'Web developer'
     },
     content: [
       { type: 'paragraph', content: 'Fala galera 👋' },
@@ -45,14 +46,15 @@ function App() {
         <Sidebar />
         <main>
           {posts.map(post => {
-             return (
-               <Post
-                 author={post.author}
-                 content={post.content}
-                 publishedAt={post.publishedAt}
-               />
-             )
-           })}
+            return (
+              <Post
+                key={post.id}
+                author={post.author}
+                content={post.content}
+                publishedAt={post.publishedAt}
+              />
+            )
+          })}
         </main>
       </div>
     </div>
